@@ -38,67 +38,40 @@ class _PacientesViviendaScreenSate extends State<PacientesViviendaScreen> {
     return fechaBaja == null ? 'Activo' : 'Inactivo';
   }
 
-Future<String> getData() async {
-  var Dbdata = await DBPostgres().DBGetPacientesVivienda(
-    widget.vivienda.CodCasa,
-    'null', // Esto trae TODOS los pacientes de la vivienda (activos e inactivos en la vivienda)
-  );
-  
-  // Obtener todos los pacientes para saber el estado global
-  var todosPacientes = await DBPostgres().DBGetPacientes();
-  
-  // Crear un mapa de estado global: CodUsuario -> ¿Está activo globalmente?
-  Map<int, bool> activoGlobal = {};
-  
-  for (var p in todosPacientes) {
-    // Si p[9] es null, está activo globalmente
-    activoGlobal[p[0]] = (p[9] == null);
-  }
-  
-  setState(() {
-    PacientesViviendaList.clear();
-    for (var p in Dbdata) {
-      int codUsuario = p[0];
-      
-      // Estado en la vivienda (basado en p[13])
-      String estadoVivienda = p[13] == null ? 'Activo' : 'Inactivo';
-      
-      // Estado global (basado en el mapa)
-      bool globalActivo = activoGlobal[codUsuario] ?? false;
-      
-      // Determinar el estado final que se mostrará
-      String estadoFinal;
-      if (!globalActivo) {
-        // Si está inactivo globalmente, siempre es INACTIVO
-        estadoFinal = 'Inactivo';
-      } else {
-        // Si está activo globalmente, usar el estado de la vivienda
-        estadoFinal = estadoVivienda;
+  Future<String> getData() async {
+    var Dbdata = await DBPostgres().DBGetPacientesVivienda(
+      widget.vivienda.CodCasa,
+      'null', // Esto trae SOLO pacientes activos en la vivienda (F_BAJA is null)
+    );
+
+    setState(() {
+      PacientesViviendaList.clear();
+      for (var p in Dbdata) {
+        // Como pedimos 'null', todos los que vienen tienen F_BAJA = null
+        // y por lo tanto están activos en la vivienda
+        PacientesViviendaList.add(
+          Paciente(
+            p[0], // CodUsuario
+            p[1], // Nombre
+            p[2], // Apellido1
+            p[3], // Apellido2
+            p[4], // FechaNacimiento
+            p[5], // Telefono
+            p[6], // Email
+            p[7], // Organizacion
+            p[8], // DesVarSocial
+            p[9], // VarSocial
+            p[10], // DesVarSanitaria
+            p[11], // VarSanitaria
+            p[12], // F_ALTA
+            p[13], // F_BAJA (de PACIENTE_CASA)
+            'Activo', // Todos los que vienen aquí están activos en la vivienda
+          ),
+        );
       }
-      
-      PacientesViviendaList.add(
-        Paciente(
-          p[0],  // CodUsuario
-          p[1],  // Nombre
-          p[2],  // Apellido1
-          p[3],  // Apellido2
-          p[4],  // FechaNacimiento
-          p[5],  // Telefono
-          p[6],  // Email
-          p[7],  // Organizacion
-          p[8],  // DesVarSocial
-          p[9],  // VarSocial
-          p[10], // DesVarSanitaria
-          p[11], // VarSanitaria
-          p[12], // F_ALTA
-          p[13], // F_BAJA (de PACIENTE_CASA)
-          estadoFinal, // Estado calculado
-        ),
-      );
-    }
-  });
-  return 'Successfully Fetched data';
-}
+    });
+    return 'Successfully Fetched data';
+  }
 
   @override
   void initState() {
@@ -271,7 +244,7 @@ Future<String> getData() async {
                               role: widget.role,
                             ),
                           ),
-                        ),
+                        ).then((_) => getData()), // Recargar datos al volver
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -305,7 +278,7 @@ Future<String> getData() async {
                               role: widget.role,
                             ),
                           ),
-                        ),
+                        ).then((_) => getData()), // Recargar datos al volver
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -502,75 +475,79 @@ Future<String> getData() async {
   }
 
   void _showDesactivateDialog(BuildContext context, int index) {
-    final paciente = PacientesViviendaList[index];
+  final paciente = PacientesViviendaList[index];
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: [
-            Icon(Icons.warning_amber_rounded, color: Colors.orange),
-            const SizedBox(width: 10),
-            Text(LocaleData.pacientesDesactivarTitulo.getString(context)),
-          ],
-        ),
-        content: Text(
-          '${LocaleData.pacientesConfirmarDesactivar.getString(context)} '
-          '${paciente.Nombre} ${paciente.Apellido1} ${paciente.Apellido2}?',
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              LocaleData.pacientesCancelar.getString(context),
-              style: const TextStyle(color: Colors.grey),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              var Dbdata = await DBPostgres().DBActDesActPaciente(
-                paciente.CodUsuario,
-                widget.vivienda.CodCasa,
-                'CURRENT_TIMESTAMP', // F_BAJA_PACIENTE_CASA
-                'CURRENT_TIMESTAMP', // F_BAJA_PACIENTE (USUARIO_PRIVADO)
-                'CURRENT_TIMESTAMP', // F_BAJA_PACIENTE_WEARABLE
-              );
-
-              if (Dbdata == 'Correcto') {
-                if (context.mounted) {
-                  setState(() {
-                    PacientesViviendaList.removeAt(index);
-                  });
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Paciente desactivado correctamente',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      backgroundColor: Colors.green,
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
-                }
-              } else {
-                Navigator.pop(context);
-                _showErrorDialog(context);
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: Text(LocaleData.pacientesDesactivar.getString(context)),
-          ),
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Row(
+        children: [
+          Icon(Icons.warning_amber_rounded, color: Colors.orange),
+          const SizedBox(width: 10),
+          Text('Eliminar de la vivienda'),
         ],
       ),
-    );
-  }
+      content: Text(
+        '¿Estás seguro de eliminar a ${paciente.Nombre} ${paciente.Apellido1} de esta vivienda?',
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            LocaleData.pacientesCancelar.getString(context),
+            style: const TextStyle(color: Colors.grey),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            // Usamos DBActDesActPaciente pero SOLO para dar de baja en PACIENTE_CASA
+            // Pasamos COD_CASA = widget.vivienda.CodCasa, y los demás parámetros como null
+            var Dbdata = await DBPostgres().DBActDesActPaciente(
+              paciente.CodUsuario,
+              widget.vivienda.CodCasa,  // Importante: pasamos el COD_CASA correcto
+              'CURRENT_TIMESTAMP', // F_BAJA_PACIENTE_CASA - SOLO esto se actualizará
+              null, // F_BAJA_PACIENTE - lo dejamos null para NO desactivar globalmente
+              null, // F_BAJA_PACIENTE_WEARABLE - lo dejamos null
+            );
+
+            if (Dbdata == 'Correcto') {
+              if (context.mounted) {
+                setState(() {
+                  PacientesViviendaList.removeAt(index);
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Paciente eliminado de la vivienda correctamente',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: Colors.green,
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              }
+            } else {
+              Navigator.pop(context);
+              _showErrorDialog(context);
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: Text(
+            'Eliminar',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   void _showErrorDialog(BuildContext context) {
     showDialog(

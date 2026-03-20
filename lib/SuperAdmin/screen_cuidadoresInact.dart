@@ -65,40 +65,41 @@ class _CuidadoresInactScreenState extends State<CuidadoresInactScreen> {
   };
 
   Future<String> getData() async {
-    var Dbdata = await DBPostgres().DBGetCuidador('not null');
-    String Estado;
-    setState(() {
-      for (var p in Dbdata[0]) {
-        if (p[9] == null) {
-          Estado = 'Activo';
-        } else {
-          Estado = 'Inactivo';
-        }
+  var Dbdata = await DBPostgres().DBGetCuidador('not null');
+  String Estado;
+  
+  setState(() {
+    // 1. Limpiamos las listas antes de llenarlas para evitar acumulaciones
+    CuidadoresList.clear();
+    CuidadoresCasList.clear();
+
+    for (var p in Dbdata[0]) {
+      Estado = (p[9] == null) ? 'Activo' : 'Inactivo';
+      
+      // 2. Solo añadimos al cuidador si NO está ya en la lista (evita duplicados)
+      bool yaExiste = CuidadoresList.any((c) => c.CodUsuario == p[0]);
+      
+      if (!yaExiste) {
         CuidadoresList.add(
           Cuidadores(
-            p[0],
-            p[1],
-            p[2],
-            p[3],
-            p[4],
-            p[5],
-            p[6],
-            p[7],
-            p[8],
-            p[9],
-            Estado,
+            p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9], Estado,
           ),
         );
       }
-      for (var p in Dbdata[1]) {
-        CuidadoresCasList.add(CuidadoresCasa(p[0], p[1], p[2]));
-      }
-    });
+    }
+
+    for (var p in Dbdata[1]) {
+      CuidadoresCasList.add(CuidadoresCasa(p[0], p[1], p[2]));
+    }
+
+    // 3. Filtramos para la vista de inactivos
     Filtro_Status = CuidadoresList.where(
-      (Estado) => Estado.Estado == 'Inactivo',
+      (u) => u.Estado == 'Inactivo',
     ).toList();
-    return 'Successfully Fetched data';
-  }
+  });
+
+  return 'Successfully Fetched data';
+}
 
   @override
   void initState() {

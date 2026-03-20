@@ -22,6 +22,9 @@ class PacientesScreen extends StatefulWidget {
 class _PacientesScreenState extends State<PacientesScreen> {
   List<Pacientes> PacientesList = [];
   final colorPrimario = const Color.fromARGB(255, 25, 144, 234);
+  
+  // Mapa para cachear si el paciente tiene vivienda activa
+  Map<int, bool> _tieneViviendaActiva = {};
 
   // Mapa de traducciones
   final Map<String, Map<String, String>> translations = {
@@ -46,6 +49,8 @@ class _PacientesScreenState extends State<PacientesScreen> {
       'cancelar': 'Cancelar',
       'confirmar_desactivar': '¿Estás seguro de desactivar a',
       'desactivando': 'Desactivando...',
+      'sin_vivienda_activa': '⚠️ Sin vivienda asignada',
+      'ultima_vivienda': 'Última vivienda conocida (dado de baja)',
     },
     'en': {
       'titulo': 'Patients',
@@ -68,6 +73,8 @@ class _PacientesScreenState extends State<PacientesScreen> {
       'cancelar': 'Cancel',
       'confirmar_desactivar': 'Are you sure you want to deactivate',
       'desactivando': 'Deactivating...',
+      'sin_vivienda_activa': '⚠️ No housing assigned',
+      'ultima_vivienda': 'Last known housing (deactivated)',
     }
   };
 
@@ -83,6 +90,10 @@ class _PacientesScreenState extends State<PacientesScreen> {
 
   Future<String> getData() async {
     var Dbdata = await DBPostgres().DBGetPacientes();
+    
+    // Limpiar cache anterior
+    _tieneViviendaActiva.clear();
+    
     setState(() {
       PacientesList.clear();
       for (var p in Dbdata) {
@@ -91,31 +102,80 @@ class _PacientesScreenState extends State<PacientesScreen> {
           PacientesList.add(
             Pacientes(
               p[0],  // CodUsuario
-              p[1],  // Nombre
-              p[2],  // Apellido1
-              p[3],  // Apellido2
-              p[4],  // FechaNacimiento
-              p[5],  // Telefono
-              p[6],  // Email
-              p[7],  // Organizacion
+              p[1] ?? '',  // Nombre
+              p[2] ?? '',  // Apellido1
+              p[3] ?? '',  // Apellido2
+              p[4] ?? '',  // FechaNacimiento
+              p[5] ?? '',  // Telefono
+              p[6] ?? '',  // Email
+              p[7] ?? '',  // Organizacion
               p[8],  // F_ALTA
               p[9],  // F_BAJA (USUARIO_PRIVADO)
-              p[10], // Direccion
-              p[11], // Numero
-              p[12], // Piso
-              p[13], // Puerta
-              p[14], // Localidad
-              p[15], // Provincia
-              p[16], // VarSocial
-              p[17], // VarSanitaria
+              p[10] ?? '', // Direccion
+              p[11] ?? '', // Numero
+              p[12] ?? '', // Piso
+              p[13] ?? '', // Puerta
+              p[14] ?? '', // Localidad
+              p[15] ?? '', // Provincia
+              p[16] ?? '', // VarSocial
+              p[17] ?? '', // VarSanitaria
               p[18], // F_BAJA_Casa
               determinarEstado(p[9]),
             ),
           );
+          
+          // Verificar si tiene vivienda activa (de manera asíncrona)
+          _verificarViviendaActiva(p[0]);
         }
       }
     });
     return 'Successfully Fetched data';
+  }
+
+  // Método para verificar si el paciente tiene vivienda activa
+  Future<void> _verificarViviendaActiva(int codUsuario) async {
+    try {
+      // Obtenemos TODAS las viviendas activas
+      var viviendas = await DBPostgres().DBGetVivienda('null');
+      
+      // Por cada vivienda, verificamos si el paciente está asignado activamente
+      for (var vivienda in viviendas) {
+        int codCasa = vivienda[0];
+        
+        // Obtenemos los pacientes activos de esa vivienda
+        var pacientesVivienda = await DBPostgres().DBGetPacientesVivienda(
+          codCasa, 
+          'null'  // Solo pacientes activos en la vivienda
+        );
+        
+        // Buscamos si nuestro paciente está en esa lista
+        for (var p in pacientesVivienda) {
+          if (p[0] == codUsuario) {
+            if (mounted) {
+              setState(() {
+                _tieneViviendaActiva[codUsuario] = true;
+              });
+            }
+            return;
+          }
+        }
+      }
+      
+      // Si no se encontró en ninguna vivienda activa
+      if (mounted) {
+        setState(() {
+          _tieneViviendaActiva[codUsuario] = false;
+        });
+      }
+      
+    } catch (e) {
+      print('Error verificando vivienda para usuario $codUsuario: $e');
+      if (mounted) {
+        setState(() {
+          _tieneViviendaActiva[codUsuario] = false;
+        });
+      }
+    }
   }
 
   @override
@@ -237,6 +297,7 @@ class _PacientesScreenState extends State<PacientesScreen> {
 
   Widget _buildPacienteCard(BuildContext context, int index) {
     final paciente = PacientesList[index];
+    bool tieneViviendaActiva = _tieneViviendaActiva[paciente.CodUsuario] ?? false;
     
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -248,6 +309,7 @@ class _PacientesScreenState extends State<PacientesScreen> {
               return PacienteModal(
                 paciente: paciente,
                 role: widget.role,
+                tieneViviendaActiva: tieneViviendaActiva,
                 onStatusChanged: () {
                   getData();
                 },
@@ -333,18 +395,25 @@ class _PacientesScreenState extends State<PacientesScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.home_outlined, size: 14, color: Colors.grey.shade500),
+                        Icon(
+                          tieneViviendaActiva ? Icons.home : Icons.home_work,
+                          size: 14, 
+                          color: tieneViviendaActiva 
+                              ? Colors.green.shade500 
+                              : Colors.orange.shade500,
+                        ),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            paciente.F_BAJA_Casa == null
-                                ? '${paciente.Direccion}, ${paciente.Localidad}'
-                                : t('no_vivienda'),
+                            _getTextoDireccion(paciente, tieneViviendaActiva),
                             style: TextStyle(
                               fontSize: 13,
-                              color: paciente.F_BAJA_Casa == null
+                              color: tieneViviendaActiva
                                   ? Colors.grey.shade600
-                                  : Colors.grey.shade400,
+                                  : Colors.orange.shade700,
+                              fontWeight: tieneViviendaActiva 
+                                  ? FontWeight.normal 
+                                  : FontWeight.w500,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -377,6 +446,16 @@ class _PacientesScreenState extends State<PacientesScreen> {
       ),
     );
   }
+
+  String _getTextoDireccion(Pacientes paciente, bool tieneViviendaActiva) {
+    if (!tieneViviendaActiva) {
+      return t('sin_vivienda_activa');
+    }
+    if (paciente.Direccion.isNotEmpty) {
+      return '${paciente.Direccion}, ${paciente.Localidad}';
+    }
+    return t('no_vivienda');
+  }
 }
 
 /// *****************************************************************************
@@ -385,12 +464,14 @@ class _PacientesScreenState extends State<PacientesScreen> {
 class PacienteModal extends StatefulWidget {
   final Pacientes paciente;
   final String role;
+  final bool tieneViviendaActiva;
   final VoidCallback onStatusChanged;
 
   const PacienteModal({
     super.key,
     required this.paciente,
     required this.role,
+    required this.tieneViviendaActiva,
     required this.onStatusChanged,
   });
 
@@ -412,13 +493,15 @@ class _PacienteModalState extends State<PacienteModal> {
       'autonomia': 'Autonomía',
       'estado': 'Estado',
       'activo': 'Activo',
-      'editar': '',
+      'editar': 'Editar Paciente',
       'desactivar': 'Desactivar Paciente',
       'vivienda_actual': 'Vivienda actual',
       'no_vivienda': 'Sin vivienda asignada',
       'cancelar': 'Cancelar',
       'confirmar_desactivar': '¿Estás seguro de desactivar a',
       'desactivando': 'Desactivando...',
+      'sin_vivienda_activa': '⚠️ Sin vivienda asignada actualmente',
+      'ultima_vivienda': 'Última vivienda conocida (dado de baja)',
     },
     'en': {
       'email': 'Email',
@@ -436,6 +519,8 @@ class _PacienteModalState extends State<PacienteModal> {
       'cancelar': 'Cancel',
       'confirmar_desactivar': 'Are you sure you want to deactivate',
       'desactivando': 'Deactivating...',
+      'sin_vivienda_activa': '⚠️ No housing currently assigned',
+      'ultima_vivienda': 'Last known housing (deactivated)',
     }
   };
 
@@ -576,7 +661,7 @@ class _PacienteModalState extends State<PacienteModal> {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: Text(t('desactivar')),
+            child: Text(t('desactivar'), style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -711,13 +796,8 @@ class _PacienteModalState extends State<PacienteModal> {
             
             const SizedBox(height: 12),
             
-            _buildInfoCard(
-              icon: Icons.home,
-              label: t('direccion'),
-              value: widget.paciente.F_BAJA_Casa == null
-                  ? '${widget.paciente.Direccion}, ${widget.paciente.Numero}, ${widget.paciente.Piso}${widget.paciente.Puerta}, ${widget.paciente.Localidad}, ${widget.paciente.Provincia}'
-                  : t('no_vivienda'),
-            ),
+            // Tarjeta de dirección con información de estado
+            _buildDireccionCard(),
             
             const SizedBox(height: 12),
             
@@ -783,7 +863,7 @@ class _PacienteModalState extends State<PacienteModal> {
             
             const SizedBox(height: 24),
             
-            // BOTÓN DESACTIVAR (arriba)
+            // BOTÓN DESACTIVAR
             Row(
               children: [
                 Expanded(
@@ -801,7 +881,7 @@ class _PacienteModalState extends State<PacienteModal> {
             
             const SizedBox(height: 12),
             
-            // BOTÓN EDITAR (abajo)
+            // BOTÓN EDITAR
             Row(
               children: [
                 Expanded(
@@ -829,6 +909,106 @@ class _PacienteModalState extends State<PacienteModal> {
             const SizedBox(height: 32),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDireccionCard() {
+    String direccionCompleta = '';
+    if (widget.paciente.Direccion.isNotEmpty) {
+      direccionCompleta = '${widget.paciente.Direccion}, ${widget.paciente.Numero}';
+      if (widget.paciente.Piso.isNotEmpty) {
+        direccionCompleta += ', ${widget.paciente.Piso}${widget.paciente.Puerta}';
+      }
+      direccionCompleta += ', ${widget.paciente.Localidad}, ${widget.paciente.Provincia}';
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: widget.tieneViviendaActiva 
+              ? Colors.green.withOpacity(0.3) 
+              : Colors.orange.withOpacity(0.3),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: widget.tieneViviendaActiva 
+                      ? Colors.green.withOpacity(0.1)
+                      : Colors.orange.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  widget.tieneViviendaActiva ? Icons.home : Icons.home_work,
+                  size: 20, 
+                  color: widget.tieneViviendaActiva 
+                      ? Colors.green.shade700
+                      : Colors.orange.shade700,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      t('direccion'),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      direccionCompleta.isNotEmpty ? direccionCompleta : t('no_vivienda'),
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF1A2B3C),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if (!widget.tieneViviendaActiva && direccionCompleta.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.orange.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.orange.withOpacity(0.3)),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.info_outline, size: 16, color: Colors.orange.shade700),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      t('ultima_vivienda'),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.orange.shade700,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }

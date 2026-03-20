@@ -58,7 +58,7 @@ class _WearablesScreenSate extends State<WearablesScreen> {
     "",
     DateTime.now(),
     null,
-    "none",
+    "",
     0,
     "none",
   );
@@ -70,6 +70,7 @@ class _WearablesScreenSate extends State<WearablesScreen> {
       'ACTIVO',
     );
     setState(() {
+      WearableList.clear();
       for (var p in Dbdata) {
         if (p[5] == null) {
           Estado = 'Activo';
@@ -85,7 +86,7 @@ class _WearablesScreenSate extends State<WearablesScreen> {
             p[4],
             p[5],
             p[6],
-            p[7],
+            p[7] ?? '',
             p[8],
             Estado,
           ),
@@ -106,17 +107,32 @@ class _WearablesScreenSate extends State<WearablesScreen> {
     List<Wearable> wearableList = [];
     Map<String, Wearable> uniqueWearablesMap = {};
 
+    // IDs de wearables que YA ESTÁN asignados a este paciente actualmente
+    Set<int> wearablesAsignadosActuales = WearableList.map((w) => w.CodWearable).toSet();
+
     for (var p in Dbdata) {
+      // Verificar si el wearable NO está asignado actualmente a este paciente
+      int codWearable = p[0];
+      
+      // Si ya está asignado actualmente, lo saltamos
+      if (wearablesAsignadosActuales.contains(codWearable)) {
+        continue;
+      }
+      
       if (p[5] == null) {
         Estado = 'Activo';
       } else {
         Estado = 'Inactivo';
       }
-      print(Estado);
+      
       wearableList.add(
-        Wearable(p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], Estado),
+        Wearable(
+          p[0], p[1], p[2], p[3] ?? '', p[4], p[5], p[6], p[7] ?? '', p[8], Estado
+        ),
       );
     }
+    
+    // Crear mapa de wearables únicos por ID
     for (Wearable wearable in wearableList) {
       if (!uniqueWearablesMap.containsKey(wearable.IdWearable)) {
         uniqueWearablesMap[wearable.IdWearable] = wearable;
@@ -134,6 +150,7 @@ class _WearablesScreenSate extends State<WearablesScreen> {
   Future<String> getTipoWearable() async {
     var Dbdata = await DBPostgres().DBGetTipoWearable();
     setState(() {
+      TipoWearableList.clear();
       for (var p in Dbdata) {
         TipoWearableList.add(TipoWearable(p[0], p[1]));
       }
@@ -144,9 +161,13 @@ class _WearablesScreenSate extends State<WearablesScreen> {
   @override
   void initState() {
     super.initState();
-    getData();
-    getWearableDisp();
-    getTipoWearable();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    await getData();
+    await getWearableDisp();
+    await getTipoWearable();
   }
 
   Map<String, String> wearableTypeTranslations = {
@@ -225,12 +246,18 @@ class _WearablesScreenSate extends State<WearablesScreen> {
                       ],
                     ),
                   )
-                : ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: WearableList.length,
-                    itemBuilder: (context, index) {
-                      return _buildWearableCard(context, index);
+                : RefreshIndicator(
+                    onRefresh: () async {
+                      await _loadData();
                     },
+                    color: colorPrimario,
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: WearableList.length,
+                      itemBuilder: (context, index) {
+                        return _buildWearableCard(context, index);
+                      },
+                    ),
                   ),
           ),
         ),
@@ -243,9 +270,11 @@ class _WearablesScreenSate extends State<WearablesScreen> {
       padding: const EdgeInsets.only(bottom: 20),
       child: FloatingActionButton.extended(
         heroTag: "btn1",
-        onPressed: () {
-          getWearableDisp();
-          _showAddWearableDialog(context);
+        onPressed: () async {
+          await getWearableDisp(); // Recargar disponibles antes de mostrar diálogo
+          if (mounted) {
+            _showAddWearableDialog(context);
+          }
         },
         label: Text(
           LocaleData.wearablesAnadir.getString(context),
@@ -321,7 +350,7 @@ class _WearablesScreenSate extends State<WearablesScreen> {
                       child: Text(
                         (wearableTypeTranslations[wearable.TipoWeareable] ??
                                 wearable.TipoWeareable) +
-                            wearable.DesOtros,
+                            (wearable.DesOtros.isNotEmpty ? ' ${wearable.DesOtros}' : ''),
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.grey.shade600,
@@ -380,173 +409,181 @@ class _WearablesScreenSate extends State<WearablesScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.add_circle, color: colorPrimario, size: 28),
-                    const SizedBox(width: 10),
+                    Row(
+                      children: [
+                        Icon(Icons.add_circle, color: colorPrimario, size: 28),
+                        const SizedBox(width: 10),
+                        Text(
+                          LocaleData.wearablesAnadirTitulo.getString(context),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    
                     Text(
-                      LocaleData.wearablesAnadirTitulo.getString(context),
+                      LocaleData.wearablesExistente.getString(context),
                       style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.grey.shade200),
+                      ),
+                      child: DropdownButtonFormField<Wearable>(
+                        items: WearableDispList.map((wearable) => DropdownMenuItem(
+                          value: wearable,
+                          child: Text(wearable.IdWearable),
+                        )).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() {
+                              _btnActiveIdWearableExistente = true;
+                              CodWearable = value.CodWearable;
+                              _IdWearableExistenteController.text = value.IdWearable;
+                              CodPacienteWearableExist = value.CodUsuario ?? 0;
+                              if (value.IdWearable == "Ninguno") {
+                                _btnActiveIdWearableExistente = false;
+                              }
+                            });
+                          }
+                        },
+                        decoration: InputDecoration(
+                          labelText: LocaleData.wearablesSeleccionar.getString(context),
+                          labelStyle: TextStyle(color: Colors.grey.shade600),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 20),
+                    
+                    Text(
+                      LocaleData.wearablesONuevo.getString(context),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.grey.shade200),
+                      ),
+                      child: TextFormField(
+                        controller: _IdWearableNuevoController,
+                        decoration: InputDecoration(
+                          labelText: LocaleData.wearablesId.getString(context),
+                          labelStyle: TextStyle(color: Colors.grey.shade600),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            _btnActiveIdWearableNuevo = value.isNotEmpty;
+                          });
+                        },
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 16),
+                    
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.grey.shade200),
+                      ),
+                      child: DropdownButtonFormField<TipoWearable>(
+                        items: TipoWearableList.map((tipo) => DropdownMenuItem(
+                          value: tipo,
+                          child: Text(
+                            wearableTypeTranslations[tipo.TipoWearableTabla] ??
+                                tipo.TipoWearableTabla,
+                          ),
+                        )).toList(),
+                        onChanged: (TipoWearable? newValue) {
+                          setState(() {
+                            _btnActiveTipoWearable = true;
+                            CodTipoWearable = newValue!.CodTipoWearable;
+                            if (newValue.TipoWearableTabla == 'Otros') {
+                              _showOtherValuePopup(context);
+                            }
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: LocaleData.wearablesTipo.getString(context),
+                          labelStyle: TextStyle(color: Colors.grey.shade600),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 24),
+                    
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () => _handleAddWearable(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorPrimario,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: Text(
+                          LocaleData.wearablesContinuar.getString(context),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                
-                Text(
-                  LocaleData.wearablesExistente.getString(context),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: DropdownButtonFormField(
-                    items: WearableDispList.map((wearable) => DropdownMenuItem(
-                      value: wearable,
-                      child: Text(wearable.IdWearable),
-                    )).toList(),
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          _btnActiveIdWearableExistente = true;
-                          CodWearable = value.CodWearable;
-                          _IdWearableExistenteController.text = value.IdWearable;
-                          CodPacienteWearableExist = value.CodUsuario!;
-                          if (value.IdWearable == "Ninguno") {
-                            _btnActiveIdWearableExistente = false;
-                          }
-                        });
-                      }
-                    },
-                    decoration: InputDecoration(
-                      labelText: LocaleData.wearablesSeleccionar.getString(context),
-                      labelStyle: TextStyle(color: Colors.grey.shade600),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    ),
-                  ),
-                ),
-                
-                const SizedBox(height: 20),
-                
-                Text(
-                  LocaleData.wearablesONuevo.getString(context),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: TextFormField(
-                    controller: _IdWearableNuevoController,
-                    decoration: InputDecoration(
-                      labelText: LocaleData.wearablesId.getString(context),
-                      labelStyle: TextStyle(color: Colors.grey.shade600),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        _btnActiveIdWearableNuevo = value.isNotEmpty;
-                      });
-                    },
-                  ),
-                ),
-                
-                const SizedBox(height: 16),
-                
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: DropdownButtonFormField(
-                    items: TipoWearableList.map((tipo) => DropdownMenuItem(
-                      value: tipo,
-                      child: Text(
-                        wearableTypeTranslations[tipo.TipoWearableTabla] ??
-                            tipo.TipoWearableTabla,
-                      ),
-                    )).toList(),
-                    onChanged: (TipoWearable? newValue) {
-                      setState(() {
-                        _btnActiveTipoWearable = true;
-                        CodTipoWearable = newValue!.CodTipoWearable;
-                        if (newValue.TipoWearableTabla == 'Otros') {
-                          _showOtherValuePopup(context);
-                        }
-                      });
-                    },
-                    decoration: InputDecoration(
-                      labelText: LocaleData.wearablesTipo.getString(context),
-                      labelStyle: TextStyle(color: Colors.grey.shade600),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    ),
-                  ),
-                ),
-                
-                const SizedBox(height: 24),
-                
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () => _handleAddWearable(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorPrimario,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: Text(
-                      LocaleData.wearablesContinuar.getString(context),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          }
         );
       },
-    );
+    ).then((_) {
+      // Al cerrar el diálogo, recargar los datos
+      _loadData();
+    });
   }
 
   void _showEditWearableDialog(BuildContext context, int index) {
     _idWearableController.text = WearableList[index].IdWearable;
+    CodTipoWearable = WearableList[index].CodTipoWearable;
     
     showDialog(
       context: context,
@@ -601,7 +638,7 @@ class _WearablesScreenSate extends State<WearablesScreen> {
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: Colors.grey.shade200),
                   ),
-                  child: DropdownButtonFormField(
+                  child: DropdownButtonFormField<TipoWearable>(
                     value: TipoWearableList.firstWhere(
                       (tipoSensor) => tipoSensor.CodTipoWearable ==
                           WearableList[index].CodTipoWearable,
@@ -645,16 +682,8 @@ class _WearablesScreenSate extends State<WearablesScreen> {
                           _DesOtrosTipoWearableController.text,
                         ) == true) {
                           if (context.mounted) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => WearablesScreen(
-                                  paciente: widget.paciente,
-                                  vivienda: widget.vivienda,
-                                  role: widget.role,
-                                ),
-                              ),
-                            );
+                            Navigator.pop(context);
+                            await _loadData();
                           }
                         }
                       } else {
@@ -682,7 +711,9 @@ class _WearablesScreenSate extends State<WearablesScreen> {
           ),
         );
       },
-    );
+    ).then((_) {
+      _loadData();
+    });
   }
 
   void _showDeactivateDialog(BuildContext context, int index) {
@@ -721,16 +752,8 @@ class _WearablesScreenSate extends State<WearablesScreen> {
               );
               if (Dbdata == 'Correcto') {
                 if (context.mounted) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => WearablesScreen(
-                        paciente: widget.paciente,
-                        vivienda: widget.vivienda,
-                        role: widget.role,
-                      ),
-                    ),
-                  );
+                  Navigator.pop(context);
+                  await _loadData();
                 }
               } else {
                 Navigator.pop(context);
@@ -816,17 +839,9 @@ class _WearablesScreenSate extends State<WearablesScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WearablesScreen(
-                    paciente: widget.paciente,
-                    vivienda: widget.vivienda,
-                    role: widget.role,
-                  ),
-                ),
-              );
+              Navigator.pop(context); // Cerrar diálogo de éxito
+              Navigator.pop(context); // Cerrar diálogo de añadir
+              _loadData();
             },
             child: Text(
               LocaleData.wearablesAceptar.getString(context),

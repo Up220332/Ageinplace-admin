@@ -612,7 +612,7 @@ class _PacienteInactivoModalState extends State<PacienteInactivoModal> {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: Text(t('activar')),
+            child: Text(t('activar'),style: TextStyle(color: Colors.white),),
           ),
         ],
       ),

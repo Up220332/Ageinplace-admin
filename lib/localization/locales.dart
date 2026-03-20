@@ -31,7 +31,8 @@ mixin LocaleData {
   static const String viviendasAnadir = "viviendasAnadir";
   static const String viviendasInactivas = "viviendasInactivas";
   static const String viviendasDesactivarTitulo = "viviendasDesactivarTitulo";
-  static const String viviendasConfirmarDesactivar = "viviendasConfirmarDesactivar";
+  static const String viviendasConfirmarDesactivar =
+      "viviendasConfirmarDesactivar";
   static const String viviendasCancelar = "viviendasCancelar";
   static const String viviendasDesactivar = "viviendasDesactivar";
   static const String viviendasError = "viviendasError";
@@ -57,7 +58,8 @@ mixin LocaleData {
   static const String viviendasCoordenadas = "viviendasCoordenadas";
   static const String viviendasPlantas = "viviendasPlantas";
   static const String viviendasFechaAlta = "viviendasFechaAlta";
-  static const String viviendasInformacionCompleta = "viviendasInformacionCompleta";
+  static const String viviendasInformacionCompleta =
+      "viviendasInformacionCompleta";
   static const String viviendasActivo = "viviendasActivo";
   static const String viviendasInactivo = "viviendasInactivo";
 
@@ -95,16 +97,20 @@ mixin LocaleData {
   static const String habitacionesInactivas = "habitacionesInactivas";
   static const String habitacionesModificar = "habitacionesModificar";
   static const String habitacionesDesactivar = "habitacionesDesactivar";
-  static const String habitacionesModificarTitulo = "habitacionesModificarTitulo";
+  static const String habitacionesModificarTitulo =
+      "habitacionesModificarTitulo";
   static const String habitacionesTipo = "habitacionesTipo";
   static const String habitacionesDescripcion = "habitacionesDescripcion";
   static const String habitacionesNumeroPlanta = "habitacionesNumeroPlanta";
   static const String habitacionesGuardarCambios = "habitacionesGuardarCambios";
-  static const String habitacionesDesactivarTitulo = "habitacionesDesactivarTitulo";
-  static const String habitacionesConfirmarDesactivar = "habitacionesConfirmarDesactivar";
+  static const String habitacionesDesactivarTitulo =
+      "habitacionesDesactivarTitulo";
+  static const String habitacionesConfirmarDesactivar =
+      "habitacionesConfirmarDesactivar";
   static const String habitacionesCancelar = "habitacionesCancelar";
   static const String habitacionesError = "habitacionesError";
-  static const String habitacionesErrorDesactivar = "habitacionesErrorDesactivar";
+  static const String habitacionesErrorDesactivar =
+      "habitacionesErrorDesactivar";
   static const String habitacionesAceptar = "habitacionesAceptar";
   static const String habitacionesPlanta = "habitacionesPlanta";
   static const String campoObligatorio = "campoObligatorio";
@@ -115,9 +121,11 @@ mixin LocaleData {
   static const String nuevaHabitacionHeader = "nuevaHabitacionHeader";
   static const String nuevaHabitacionInfo = "nuevaHabitacionInfo";
   static const String nuevaHabitacionTipo = "nuevaHabitacionTipo";
-  static const String nuevaHabitacionSeleccioneTipo = "nuevaHabitacionSeleccioneTipo";
+  static const String nuevaHabitacionSeleccioneTipo =
+      "nuevaHabitacionSeleccioneTipo";
   static const String nuevaHabitacionDescripcion = "nuevaHabitacionDescripcion";
-  static const String nuevaHabitacionNumeroPlanta = "nuevaHabitacionNumeroPlanta";
+  static const String nuevaHabitacionNumeroPlanta =
+      "nuevaHabitacionNumeroPlanta";
   static const String nuevaHabitacionCrear = "nuevaHabitacionCrear";
   static const String nuevaHabitacionExito = "nuevaHabitacionExito";
   static const String nuevaHabitacionCreada = "nuevaHabitacionCreada";
@@ -126,13 +134,16 @@ mixin LocaleData {
   static const String nuevaHabitacionAceptar = "nuevaHabitacionAceptar";
 
   // Traducciones para Habitaciones Inactivas
-  static const String habitacionesInactivasTitulo = "habitacionesInactivasTitulo";
+  static const String habitacionesInactivasTitulo =
+      "habitacionesInactivasTitulo";
   static const String habitacionesInactivasNoHay = "habitacionesInactivasNoHay";
-  static const String habitacionesInactivasDescripcion = "habitacionesInactivasDescripcion";
+  static const String habitacionesInactivasDescripcion =
+      "habitacionesInactivasDescripcion";
   static const String habitacionesInactiva = "habitacionesInactiva";
   static const String habitacionesFechaBaja = "habitacionesFechaBaja";
   static const String habitacionesActivarTitulo = "habitacionesActivarTitulo";
-  static const String habitacionesConfirmarActivar = "habitacionesConfirmarActivar";
+  static const String habitacionesConfirmarActivar =
+      "habitacionesConfirmarActivar";
   static const String habitacionesActivar = "habitacionesActivar";
   static const String habitacionesErrorActivar = "habitacionesErrorActivar";
 
@@ -197,7 +208,8 @@ mixin LocaleData {
   static const String wearablesModificarTitulo = "wearablesModificarTitulo";
   static const String wearablesDesactivar = "wearablesDesactivar";
   static const String wearablesDesactivarTitulo = "wearablesDesactivarTitulo";
-  static const String wearablesConfirmarDesactivar = "wearablesConfirmarDesactivar";
+  static const String wearablesConfirmarDesactivar =
+      "wearablesConfirmarDesactivar";
   static const String wearablesCancelar = "wearablesCancelar";
   static const String wearablesError = "wearablesError";
   static const String wearablesErrorDesactivar = "wearablesErrorDesactivar";
@@ -232,7 +244,8 @@ mixin LocaleData {
   static const String pacientesActivo = "pacientesActivo";
   static const String pacientesInactivo = "pacientesInactivo";
   static const String pacientesDesactivarTitulo = "pacientesDesactivarTitulo";
-  static const String pacientesConfirmarDesactivar = "pacientesConfirmarDesactivar";
+  static const String pacientesConfirmarDesactivar =
+      "pacientesConfirmarDesactivar";
   static const String pacientesCancelar = "pacientesCancelar";
   static const String pacientesDesactivar = "pacientesDesactivar";
   static const String pacientesError = "pacientesError";
@@ -261,12 +274,15 @@ mixin LocaleData {
   static const String modPacienteEmail = "modPacienteEmail";
   static const String modPacienteEmailInvalido = "modPacienteEmailInvalido";
   static const String modPacienteTelefono = "modPacienteTelefono";
-  static const String modPacienteTelefonoInvalido = "modPacienteTelefonoInvalido";
+  static const String modPacienteTelefonoInvalido =
+      "modPacienteTelefonoInvalido";
   static const String modPacienteBuscar = "modPacienteBuscar";
   static const String modPacienteOrganizacion = "modPacienteOrganizacion";
   static const String modPacienteVariables = "modPacienteVariables";
-  static const String modPacienteVariablesSociales = "modPacienteVariablesSociales";
-  static const String modPacienteVariablesSanitarias = "modPacienteVariablesSanitarias";
+  static const String modPacienteVariablesSociales =
+      "modPacienteVariablesSociales";
+  static const String modPacienteVariablesSanitarias =
+      "modPacienteVariablesSanitarias";
   static const String modPacienteGuardar = "modPacienteGuardar";
   static const String modPacienteError = "modPacienteError";
   static const String modPacienteExito = "modPacienteExito";
@@ -275,9 +291,11 @@ mixin LocaleData {
   static const String modPacienteEmailRegistrado = "modPacienteEmailRegistrado";
   static const String modPacienteErrorModificar = "modPacienteErrorModificar";
   static const String modPacientePatologia = "modPacientePatologia";
-  static const String modPacienteEspecifiquePatologia = "modPacienteEspecifiquePatologia";
+  static const String modPacienteEspecifiquePatologia =
+      "modPacienteEspecifiquePatologia";
   static const String modPacienteVariableSocial = "modPacienteVariableSocial";
-  static const String modPacienteEspecifiqueVariable = "modPacienteEspecifiqueVariable";
+  static const String modPacienteEspecifiqueVariable =
+      "modPacienteEspecifiqueVariable";
 
   // Traducciones para Modificar Vivienda
   static const String modViviendaTitulo = "modViviendaTitulo";
@@ -338,7 +356,8 @@ mixin LocaleData {
   static const String newCuidadorEmail = "newCuidadorEmail";
   static const String newCuidadorEmailInvalido = "newCuidadorEmailInvalido";
   static const String newCuidadorTelefono = "newCuidadorTelefono";
-  static const String newCuidadorTelefonoInvalido = "newCuidadorTelefonoInvalido";
+  static const String newCuidadorTelefonoInvalido =
+      "newCuidadorTelefonoInvalido";
   static const String newCuidadorBuscar = "newCuidadorBuscar";
   static const String newCuidadorOrganizacion = "newCuidadorOrganizacion";
   static const String newCuidadorInfoCuidador = "newCuidadorInfoCuidador";
@@ -346,7 +365,8 @@ mixin LocaleData {
   static const String newCuidadorSeleccioneTipo = "newCuidadorSeleccioneTipo";
   static const String newCuidadorCrear = "newCuidadorCrear";
   static const String newCuidadorOtros = "newCuidadorOtros";
-  static const String newCuidadorEspecifiqueParentesco = "newCuidadorEspecifiqueParentesco";
+  static const String newCuidadorEspecifiqueParentesco =
+      "newCuidadorEspecifiqueParentesco";
   static const String newCuidadorExito = "newCuidadorExito";
   static const String newCuidadorCreado = "newCuidadorCreado";
   static const String newCuidadorError = "newCuidadorError";
@@ -366,9 +386,15 @@ mixin LocaleData {
   static const String voluntario = "Voluntario";
   static const String otros = "Otros";
 
+
+  static const String viviendasActivar = 'viviendasActivar';
+  static const String viviendasSeguroActivar = 'viviendasSeguroActivar';
+  static const String viviendasConfirmarActivar = 'viviendasConfirmarActivar';
+
+
   static const Map<String, dynamic> ES = {
     // Títulos y textos generales
-    pacientetitulo : 'Paciente',
+    pacientetitulo: 'Paciente',
     titleCaregiver: 'Pacientes',
     body: 'Bienvenido! Es un gusto volver a verte',
     inputEmail: 'Correo electrónico',
@@ -393,7 +419,8 @@ mixin LocaleData {
     viviendasAnadir: 'Añadir Vivienda',
     viviendasInactivas: 'Viviendas Inactivas',
     viviendasDesactivarTitulo: '¿Desactivar vivienda?',
-    viviendasConfirmarDesactivar: '¿Está seguro que desea desactivar la vivienda en {direccion}?',
+    viviendasConfirmarDesactivar:
+        '¿Está seguro que desea desactivar la vivienda en {direccion}?',
     viviendasCancelar: 'Cancelar',
     viviendasDesactivar: 'Desactivar',
     viviendasError: 'Error',
@@ -463,7 +490,8 @@ mixin LocaleData {
     habitacionesNumeroPlanta: 'Número de Planta',
     habitacionesGuardarCambios: 'Guardar Cambios',
     habitacionesDesactivarTitulo: '¿Desactivar habitación?',
-    habitacionesConfirmarDesactivar: '¿Está seguro que desea desactivar la habitación "{tipo}"?',
+    habitacionesConfirmarDesactivar:
+        '¿Está seguro que desea desactivar la habitación "{tipo}"?',
     habitacionesCancelar: 'Cancelar',
     habitacionesError: 'Error',
     habitacionesErrorDesactivar: 'Error al desactivar la habitación',
@@ -474,7 +502,8 @@ mixin LocaleData {
 
     // Traducciones para Nueva Habitación
     nuevaHabitacionTitulo: 'Nueva Habitación',
-    nuevaHabitacionHeader: 'Complete los campos obligatorios (*) para añadir una nueva habitación',
+    nuevaHabitacionHeader:
+        'Complete los campos obligatorios (*) para añadir una nueva habitación',
     nuevaHabitacionInfo: 'INFORMACIÓN DE LA HABITACIÓN',
     nuevaHabitacionTipo: 'Tipo de habitación *',
     nuevaHabitacionSeleccioneTipo: 'Seleccione un tipo de habitación',
@@ -490,11 +519,13 @@ mixin LocaleData {
     // Traducciones para Habitaciones Inactivas
     habitacionesInactivasTitulo: 'Habitaciones Inactivas',
     habitacionesInactivasNoHay: 'No hay habitaciones inactivas',
-    habitacionesInactivasDescripcion: 'Las habitaciones desactivadas aparecerán aquí',
+    habitacionesInactivasDescripcion:
+        'Las habitaciones desactivadas aparecerán aquí',
     habitacionesInactiva: 'Inactiva',
     habitacionesFechaBaja: 'Baja',
     habitacionesActivarTitulo: '¿Activar habitación?',
-    habitacionesConfirmarActivar: '¿Está seguro que desea activar la habitación "{tipo}"?',
+    habitacionesConfirmarActivar:
+        '¿Está seguro que desea activar la habitación "{tipo}"?',
     habitacionesActivar: 'Activar',
     habitacionesErrorActivar: 'Error al activar la habitación',
 
@@ -518,12 +549,14 @@ mixin LocaleData {
     adminModificar: 'Modificar',
     adminInactivosTitulo: 'Administradores Inactivos',
     adminNoHayInactivos: 'No hay administradores inactivos',
-    adminInactivosDescripcion: 'Los administradores desactivados aparecerán aquí',
+    adminInactivosDescripcion:
+        'Los administradores desactivados aparecerán aquí',
     adminActivarAdministrador: 'Activar Administrador',
 
     // Traducciones para Nuevo Administrador
     newAdminTitulo: 'Nuevo Administrador',
-    newAdminHeader: 'Complete los campos obligatorios (*) para registrar un nuevo administrador',
+    newAdminHeader:
+        'Complete los campos obligatorios (*) para registrar un nuevo administrador',
     newAdminInfoPersonal: 'INFORMACIÓN PERSONAL',
     newAdminNombre: 'Nombre',
     newAdminPrimerApellido: 'Primer Apellido',
@@ -538,10 +571,12 @@ mixin LocaleData {
     newAdminInfoAdicional: 'INFORMACIÓN ADICIONAL',
     newAdminOrganizacion: 'Organización',
     newAdminContinuar: 'Continuar',
-    newAdminCompletarCampos: 'Por favor, complete todos los campos obligatorios',
+    newAdminCompletarCampos:
+        'Por favor, complete todos los campos obligatorios',
     newAdminError: 'Error',
     newAdminExito: 'Éxito',
-    newAdminCorreoEnviado: 'Administrador creado correctamente. Se ha enviado un correo a {email}',
+    newAdminCorreoEnviado:
+        'Administrador creado correctamente. Se ha enviado un correo a {email}',
     newAdminAceptar: 'Aceptar',
     newAdminEmailRegistrado: 'El correo electrónico ya está registrado',
     newAdminErrorCrear: 'Error al crear el administrador',
@@ -559,7 +594,8 @@ mixin LocaleData {
     wearablesModificarTitulo: 'Modificar Wearable',
     wearablesDesactivar: 'Desactivar',
     wearablesDesactivarTitulo: '¿Desactivar wearable?',
-    wearablesConfirmarDesactivar: '¿Está seguro que desea desactivar el wearable {id}?',
+    wearablesConfirmarDesactivar:
+        '¿Está seguro que desea desactivar el wearable {id}?',
     wearablesCancelar: 'Cancelar',
     wearablesError: 'Error',
     wearablesErrorDesactivar: 'Error al desactivar el wearable',
@@ -575,13 +611,14 @@ mixin LocaleData {
     wearablesRellenarCampos: 'Por favor, rellene todos los campos',
     wearablesSeleccionarUnaOp: 'Seleccione solo una opción',
     wearablesSeleccionarTipo: 'Seleccione el tipo de wearable',
-    wearablesSeleccionarOpcion: 'Seleccione un wearable existente o cree uno nuevo',
+    wearablesSeleccionarOpcion:
+        'Seleccione un wearable existente o cree uno nuevo',
     wearablesOtros: 'Otros',
     wearablesEspecifiqueTipo: 'Especifique el tipo',
     wearablesAnadido: 'Wearable añadido correctamente',
     wearablesYaExiste: 'El wearable ya existe',
     wearablesYaAsignado: 'Este wearable ya está asignado',
-  
+
     // Traducciones para Pacientes
     pacientesDeLaVivienda: 'Pacientes de la vivienda',
     pacientesNoHayEnVivienda: 'No hay pacientes en esta vivienda',
@@ -594,7 +631,8 @@ mixin LocaleData {
     pacientesActivo: 'Activo',
     pacientesInactivo: 'Inactivo',
     pacientesDesactivarTitulo: '¿Desactivar paciente?',
-    pacientesConfirmarDesactivar: '¿Está seguro que desea desactivar a {nombre}?',
+    pacientesConfirmarDesactivar:
+        '¿Está seguro que desea desactivar a',
     pacientesCancelar: 'Cancelar',
     pacientesDesactivar: 'Desactivar',
     pacientesError: 'Error',
@@ -663,7 +701,8 @@ mixin LocaleData {
     modViviendaError: 'Error',
     modViviendaAceptar: 'Aceptar',
     modViviendaDuplicada: 'Ya existe una vivienda con esa dirección',
-    modViviendaCompletarCampos: 'Por favor, completa todos los campos obligatorios',
+    modViviendaCompletarCampos:
+        'Por favor, completa todos los campos obligatorios',
     soloNumerosPunto: 'Solo números y punto',
 
     // Traducciones para Cuidadores
@@ -688,7 +727,8 @@ mixin LocaleData {
 
     // Traducciones para Nuevo Cuidador
     newCuidadorTitulo: 'Nuevo Cuidador',
-    newCuidadorHeader: 'Complete los campos obligatorios (*) para añadir un nuevo cuidador a la vivienda',
+    newCuidadorHeader:
+        'Complete los campos obligatorios (*) para añadir un nuevo cuidador a la vivienda',
     newCuidadorInfoPersonal: 'INFORMACIÓN PERSONAL',
     newCuidadorNombre: 'Nombre',
     newCuidadorPrimerApellido: 'Primer Apellido',
@@ -717,14 +757,10 @@ mixin LocaleData {
     newCuidadorMenorEdadMsg: 'El cuidador debe ser mayor de 18 años',
     newCuidadorCerrar: 'Cerrar',
 
-    // TIPOS DE CUIDADOR (para traducción de valores)
-    'Cuidador Formal': 'Cuidador Formal',
-    'Responsable Sanitario': 'Responsable Sanitario',
-    'Familiar': 'Familiar',
-    'Vecino': 'Vecino',
-    'Amigo': 'Amigo',
-    'Voluntario': 'Voluntario',
-    'Otros': 'Otros',
+
+    viviendasActivar: 'Activar Vivienda',
+    viviendasSeguroActivar:'¿Estás seguro de que deseas activar la vivienda en',
+    viviendasConfirmarActivar: 'Activar',
   };
 
   static const Map<String, dynamic> EN = {
@@ -754,7 +790,8 @@ mixin LocaleData {
     viviendasAnadir: 'Add House',
     viviendasInactivas: 'Inactive Houses',
     viviendasDesactivarTitulo: 'Deactivate house?',
-    viviendasConfirmarDesactivar: 'Are you sure you want to deactivate the house at {direccion}?',
+    viviendasConfirmarDesactivar:
+        'Are you sure you want to deactivate the house at {direccion}?',
     viviendasCancelar: 'Cancel',
     viviendasDesactivar: 'Deactivate',
     viviendasError: 'Error',
@@ -824,7 +861,8 @@ mixin LocaleData {
     habitacionesNumeroPlanta: 'Floor Number',
     habitacionesGuardarCambios: 'Save Changes',
     habitacionesDesactivarTitulo: 'Deactivate room?',
-    habitacionesConfirmarDesactivar: 'Are you sure you want to deactivate the room "{tipo}"?',
+    habitacionesConfirmarDesactivar:
+        'Are you sure you want to deactivate the room "{tipo}"?',
     habitacionesCancelar: 'Cancel',
     habitacionesError: 'Error',
     habitacionesErrorDesactivar: 'Error deactivating room',
@@ -855,7 +893,8 @@ mixin LocaleData {
     habitacionesInactiva: 'Inactive',
     habitacionesFechaBaja: 'Deactivation date',
     habitacionesActivarTitulo: 'Activate room?',
-    habitacionesConfirmarActivar: 'Are you sure you want to activate the room "{tipo}"?',
+    habitacionesConfirmarActivar:
+        'Are you sure you want to activate the room "{tipo}"?',
     habitacionesActivar: 'Activate',
     habitacionesErrorActivar: 'Error activating room',
 
@@ -884,7 +923,8 @@ mixin LocaleData {
 
     // Translations for New Administrator
     newAdminTitulo: 'New Administrator',
-    newAdminHeader: 'Complete the required fields (*) to register a new administrator',
+    newAdminHeader:
+        'Complete the required fields (*) to register a new administrator',
     newAdminInfoPersonal: 'PERSONAL INFORMATION',
     newAdminNombre: 'Name',
     newAdminPrimerApellido: 'First Surname',
@@ -902,7 +942,8 @@ mixin LocaleData {
     newAdminCompletarCampos: 'Please complete all required fields',
     newAdminError: 'Error',
     newAdminExito: 'Success',
-    newAdminCorreoEnviado: 'Administrator created successfully. An email has been sent to {email}',
+    newAdminCorreoEnviado:
+        'Administrator created successfully. An email has been sent to {email}',
     newAdminAceptar: 'Accept',
     newAdminEmailRegistrado: 'Email is already registered',
     newAdminErrorCrear: 'Error creating administrator',
@@ -920,7 +961,8 @@ mixin LocaleData {
     wearablesModificarTitulo: 'Edit Wearable',
     wearablesDesactivar: 'Deactivate',
     wearablesDesactivarTitulo: 'Deactivate wearable?',
-    wearablesConfirmarDesactivar: 'Are you sure you want to deactivate the wearable {id}?',
+    wearablesConfirmarDesactivar:
+        'Are you sure you want to deactivate the wearable {id}?',
     wearablesCancelar: 'Cancel',
     wearablesError: 'Error',
     wearablesErrorDesactivar: 'Error deactivating wearable',
@@ -936,7 +978,8 @@ mixin LocaleData {
     wearablesRellenarCampos: 'Please fill in all fields',
     wearablesSeleccionarUnaOp: 'Select only one option',
     wearablesSeleccionarTipo: 'Select the wearable type',
-    wearablesSeleccionarOpcion: 'Select an existing wearable or create a new one',
+    wearablesSeleccionarOpcion:
+        'Select an existing wearable or create a new one',
     wearablesOtros: 'Others',
     wearablesEspecifiqueTipo: 'Specify the type',
     wearablesAnadido: 'Wearable added successfully',
@@ -955,7 +998,8 @@ mixin LocaleData {
     pacientesActivo: 'Active',
     pacientesInactivo: 'Inactive',
     pacientesDesactivarTitulo: 'Deactivate patient?',
-    pacientesConfirmarDesactivar: 'Are you sure you want to deactivate {nombre}?',
+    pacientesConfirmarDesactivar:
+        'Are you sure you want to deactivate',
     pacientesCancelar: 'Cancel',
     pacientesDesactivar: 'Deactivate',
     pacientesError: 'Error',
@@ -1049,7 +1093,8 @@ mixin LocaleData {
 
     // Translations for New Caregiver
     newCuidadorTitulo: 'New Caregiver',
-    newCuidadorHeader: 'Complete the required fields (*) to add a new caregiver to the house',
+    newCuidadorHeader:
+        'Complete the required fields (*) to add a new caregiver to the house',
     newCuidadorInfoPersonal: 'PERSONAL INFORMATION',
     newCuidadorNombre: 'Name',
     newCuidadorPrimerApellido: 'First Surname',
@@ -1078,13 +1123,9 @@ mixin LocaleData {
     newCuidadorMenorEdadMsg: 'The caregiver must be over 18 years old',
     newCuidadorCerrar: 'Close',
 
-    // CAREGIVER TYPES (for value translation)
-    'Cuidador Formal': 'Formal caregiver',
-    'Responsable Sanitario': 'Healthcare responsible',
-    'Familiar': 'Family member',
-    'Vecino': 'Neighbor',
-    'Amigo': 'Friend',
-    'Voluntario': 'Volunteer',
-    'Otros': 'Others',
+
+    viviendasActivar: 'Activate Home',
+    viviendasSeguroActivar: 'Are you sure you want to activate the home at',
+    viviendasConfirmarActivar: 'Activate',
   };
 }

@@ -56,11 +56,12 @@ class _PacientesExistentesScreen extends State<PacientesExistentesScreen> {
       'estado': 'Status',
       'agregar': 'Add',
       'no_disponible': 'Not available',
-    }
+    },
   };
 
   String t(String key) {
-    String currentLocale = FlutterLocalization.instance.currentLocale?.languageCode ?? 'es';
+    String currentLocale =
+        FlutterLocalization.instance.currentLocale?.languageCode ?? 'es';
     return translations[currentLocale]?[key] ?? translations['es']![key]!;
   }
 
@@ -75,39 +76,39 @@ class _PacientesExistentesScreen extends State<PacientesExistentesScreen> {
       widget.vivienda.CodCasa,
       'null', // Solo pacientes activos en esta vivienda
     );
-    
+
     setState(() {
       for (var p in Dbdata) {
         PacientesExistentesList.add(
           PacientesExistentes(
-            p[0],  // CodUsuario
-            p[1],  // Nombre
-            p[2],  // Apellido1
-            p[3],  // Apellido2
-            p[4],  // FechaNacimiento
-            p[5],  // Telefono
-            p[6],  // Email
-            p[7],  // Organizacion
-            p[8],  // F_ALTA
-            p[9],  // F_BAJA
+            p[0], // CodUsuario
+            p[1], // Nombre
+            p[2], // Apellido1
+            p[3], // Apellido2
+            p[4], // FechaNacimiento
+            p[5], // Telefono
+            p[6], // Email
+            p[7], // Organizacion
+            p[8], // F_ALTA
+            p[9], // F_BAJA
             determinarEstado(p[9]), // Estado basado en F_BAJA
           ),
         );
       }
-      
+
       for (var p in PacienteCasa) {
         PacientesCasaList.add(
           Paciente(
-            p[0],  // CodUsuario
-            p[1],  // Nombre
-            p[2],  // Apellido1
-            p[3],  // Apellido2
-            p[4],  // FechaNacimiento
-            p[5],  // Telefono
-            p[6],  // Email
-            p[7],  // Organizacion
-            p[8],  // DesVarSocial
-            p[9],  // VarSocial
+            p[0], // CodUsuario
+            p[1], // Nombre
+            p[2], // Apellido1
+            p[3], // Apellido2
+            p[4], // FechaNacimiento
+            p[5], // Telefono
+            p[6], // Email
+            p[7], // Organizacion
+            p[8], // DesVarSocial
+            p[9], // VarSocial
             p[10], // DesVarSanitaria
             p[11], // VarSanitaria
             p[12], // F_ALTA
@@ -117,7 +118,7 @@ class _PacientesExistentesScreen extends State<PacientesExistentesScreen> {
         );
       }
     });
-    
+
     // Filtrar pacientes que ya están asociados a la vivienda
     for (var i = 0; i < widget.paciente.length; i++) {
       for (var j = 0; j < PacientesExistentesList.length; j++) {
@@ -134,14 +135,16 @@ class _PacientesExistentesScreen extends State<PacientesExistentesScreen> {
   @override
   void initState() {
     super.initState();
-    _currentLocale = FlutterLocalization.instance.currentLocale?.languageCode ?? 'es';
+    _currentLocale =
+        FlutterLocalization.instance.currentLocale?.languageCode ?? 'es';
     getData();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    String newLocale = FlutterLocalization.instance.currentLocale?.languageCode ?? 'es';
+    String newLocale =
+        FlutterLocalization.instance.currentLocale?.languageCode ?? 'es';
     if (_currentLocale != newLocale) {
       setState(() {
         _currentLocale = newLocale;
@@ -152,7 +155,7 @@ class _PacientesExistentesScreen extends State<PacientesExistentesScreen> {
   @override
   Widget build(BuildContext context) {
     PacientesExistentesList.sort((a, b) => a.F_ALTA.compareTo(b.F_ALTA));
-    
+
     return WillPopScope(
       onWillPop: () async {
         Navigator.push(
@@ -193,10 +196,7 @@ class _PacientesExistentesScreen extends State<PacientesExistentesScreen> {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                Colors.white,
-                Colors.grey.shade50,
-              ],
+              colors: [Colors.white, Colors.grey.shade50],
             ),
           ),
           child: Padding(
@@ -206,11 +206,18 @@ class _PacientesExistentesScreen extends State<PacientesExistentesScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.elderly_outlined, size: 80, color: Colors.grey.shade400),
+                        Icon(
+                          Icons.elderly_outlined,
+                          size: 80,
+                          color: Colors.grey.shade400,
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           t('no_hay'),
-                          style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey.shade600,
+                          ),
                         ),
                       ],
                     ),
@@ -233,7 +240,9 @@ class _PacientesExistentesScreen extends State<PacientesExistentesScreen> {
                             },
                             isScrollControlled: true,
                             shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(20),
+                              ),
                             ),
                           );
                         },
@@ -291,11 +300,16 @@ class _PacientesExistentesScreen extends State<PacientesExistentesScreen> {
                                     const SizedBox(height: 4),
                                     Row(
                                       children: [
-                                        Icon(Icons.email_outlined, size: 14, color: Colors.grey.shade500),
+                                        Icon(
+                                          Icons.email_outlined,
+                                          size: 14,
+                                          color: Colors.grey.shade500,
+                                        ),
                                         const SizedBox(width: 4),
                                         Expanded(
                                           child: Text(
-                                            PacientesExistentesList[index].Email,
+                                            PacientesExistentesList[index]
+                                                .Email,
                                             style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.grey.shade600,
@@ -312,31 +326,45 @@ class _PacientesExistentesScreen extends State<PacientesExistentesScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: PacientesExistentesList[index].Estado == 'Activo' 
+                                      color:
+                                          PacientesExistentesList[index]
+                                                  .Estado ==
+                                              'Activo'
                                           ? Colors.green.withOpacity(0.1)
                                           : Colors.red.withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
-                                      PacientesExistentesList[index].Estado == 'Activo' 
+                                      PacientesExistentesList[index].Estado ==
+                                              'Activo'
                                           ? t('activo')
                                           : t('inactivo'),
                                       style: TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.w600,
-                                        color: PacientesExistentesList[index].Estado == 'Activo' 
-                                            ? Colors.green 
+                                        color:
+                                            PacientesExistentesList[index]
+                                                    .Estado ==
+                                                'Activo'
+                                            ? Colors.green
                                             : Colors.red,
                                       ),
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
                                     child: Text(
-                                      PacientesExistentesList[index].Organizacion,
+                                      PacientesExistentesList[index]
+                                          .Organizacion,
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: colorPrimario,
@@ -386,7 +414,8 @@ class PacientesModal extends StatelessWidget {
       'agregar': 'Agregar a la vivienda',
       'no_disponible': 'No disponible para agregar',
       'organizacion': 'Organización',
-      'mensaje_inactivo': 'Este paciente está INACTIVO y no puede ser agregado a ninguna vivienda',
+      'mensaje_inactivo':
+          'Este paciente está INACTIVO y no puede ser agregado a ninguna vivienda',
     },
     'en': {
       'email': 'Email',
@@ -398,19 +427,21 @@ class PacientesModal extends StatelessWidget {
       'agregar': 'Add to housing',
       'no_disponible': 'Not available to add',
       'organizacion': 'Organization',
-      'mensaje_inactivo': 'This patient is INACTIVE and cannot be added to any housing',
-    }
+      'mensaje_inactivo':
+          'This patient is INACTIVE and cannot be added to any housing',
+    },
   };
 
   String t(String key) {
-    String currentLocale = FlutterLocalization.instance.currentLocale?.languageCode ?? 'es';
+    String currentLocale =
+        FlutterLocalization.instance.currentLocale?.languageCode ?? 'es';
     return translations[currentLocale]?[key] ?? translations['es']![key]!;
   }
 
   @override
   Widget build(BuildContext context) {
     bool pacienteActivo = paciente.Estado == 'Activo';
-    
+
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -450,10 +481,7 @@ class PacientesModal extends StatelessWidget {
                     height: 100,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [
-                          colorPrimario.withOpacity(0.8),
-                          colorPrimario,
-                        ],
+                        colors: [colorPrimario.withOpacity(0.8), colorPrimario],
                       ),
                       shape: BoxShape.circle,
                     ),
@@ -535,7 +563,8 @@ class PacientesModal extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: (pacienteActivo ? Colors.green : Colors.red).withOpacity(0.1),
+                      color: (pacienteActivo ? Colors.green : Colors.red)
+                          .withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -598,13 +627,24 @@ class PacientesModal extends StatelessWidget {
                 height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: pacienteActivo 
+                  onPressed: pacienteActivo
                       ? () async {
-                          if (await DBPostgres().DBAddPaciente(
-                                paciente.CodUsuario,
-                                vivienda.CodCasa,
-                              ) ==
-                              'Correcto') {
+                          String resultado = await DBPostgres().DBAddPaciente(
+                            paciente.CodUsuario,
+                            vivienda.CodCasa,
+                          );
+
+                          if (resultado != 'Correcto') {
+                            resultado = await DBPostgres().DBActDesActPaciente(
+                              paciente.CodUsuario,
+                              vivienda.CodCasa,
+                              'null', // Limpia baja en vivienda
+                              'null', // Limpia baja en usuario
+                              'null', // Limpia baja en wearable
+                            );
+                          }
+
+                          if (resultado == 'Correcto') {
                             SendAlta(paciente.Email);
                             if (context.mounted) {
                               Navigator.pushReplacement(
@@ -617,11 +657,20 @@ class PacientesModal extends StatelessWidget {
                                 ),
                               );
                             }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Error persistente: $resultado"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
                           }
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: pacienteActivo ? colorPrimario : Colors.grey,
+                    backgroundColor: pacienteActivo
+                        ? colorPrimario
+                        : Colors.grey,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -674,10 +723,7 @@ class PacientesModal extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade600,
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                 ),
                 const SizedBox(height: 2),
                 Text(

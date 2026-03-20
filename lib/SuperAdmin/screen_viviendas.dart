@@ -194,7 +194,6 @@ class _ViviendasScreenSate extends State<ViviendasScreen> {
     );
   }
 
-  // NUEVO: FloatingActionButtons mejorados
   Widget _buildFloatingActionButtons(BuildContext context) {
     final colorPrimario = const Color.fromARGB(255, 25, 144, 234);
 
@@ -420,7 +419,6 @@ class _ViviendasScreenSate extends State<ViviendasScreen> {
     );
   }
 
-  // NUEVO: Diálogo de desactivación mejorado
   void _showDesactivateDialog(BuildContext context, int index) {
     final colorPrimario = const Color.fromARGB(255, 25, 144, 234);
 
@@ -478,14 +476,16 @@ class _ViviendasScreenSate extends State<ViviendasScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: Text(LocaleData.viviendasDesactivar.getString(context)),
+            child: Text(
+              LocaleData.viviendasDesactivar.getString(context),
+              style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
+            ),
           ),
         ],
       ),
     );
   }
 
-  // NUEVO: Diálogo de error mejorado
   void _showErrorDialog(BuildContext context) {
     final colorPrimario = const Color.fromARGB(255, 25, 144, 234);
 
@@ -500,7 +500,7 @@ class _ViviendasScreenSate extends State<ViviendasScreen> {
             Text(LocaleData.viviendasError.getString(context)),
           ],
         ),
-        content: Text(LocaleData.viviendasErrorDesactivar.getString(context)),
+        content: Text(LocaleData.viviendasErrorDesactivar.getString(context),),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
