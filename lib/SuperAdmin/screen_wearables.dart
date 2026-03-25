@@ -114,7 +114,6 @@ class _WearablesScreenSate extends State<WearablesScreen> {
       // Verificar si el wearable NO está asignado actualmente a este paciente
       int codWearable = p[0];
       
-      // Si ya está asignado actualmente, lo saltamos
       if (wearablesAsignadosActuales.contains(codWearable)) {
         continue;
       }

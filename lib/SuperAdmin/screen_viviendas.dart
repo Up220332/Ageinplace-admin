@@ -5,6 +5,7 @@
 library;
 
 import 'package:ageinplace_admin/SuperAdmin/screen_NewVivienda.dart';
+import 'package:ageinplace_admin/SuperAdmin/screen_sensores_vivienda.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -251,7 +252,6 @@ class _ViviendasScreenSate extends State<ViviendasScreen> {
     );
   }
 
-  // NUEVO: Tarjeta de vivienda moderna
   Widget _buildViviendaCard(BuildContext context, int index) {
     final vivienda = ViviendaList[index];
     final colorPrimario = const Color.fromARGB(255, 25, 144, 234);
@@ -500,7 +500,7 @@ class _ViviendasScreenSate extends State<ViviendasScreen> {
             Text(LocaleData.viviendasError.getString(context)),
           ],
         ),
-        content: Text(LocaleData.viviendasErrorDesactivar.getString(context),),
+        content: Text(LocaleData.viviendasErrorDesactivar.getString(context)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -517,7 +517,7 @@ class _ViviendasScreenSate extends State<ViviendasScreen> {
 
 /// *****************************************************************************
 /// Funcion que muestra los datos de la vivienda y nos permite acceder a las
-/// habitaciones, cuidadores y pacientes (VERSIÓN MEJORADA)
+/// habitaciones, cuidadores, pacientes y sensores
 ///****************************************************************************
 class ViviendaScreen extends StatelessWidget {
   final String role;
@@ -689,11 +689,21 @@ class ViviendaScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: _buildStatCard(
+                        child: _buildStatButton(
                           LocaleData.viviendasSensores.getString(context),
                           NumSensores.toString(),
                           Icons.sensors,
                           Colors.purple,
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SensoresViviendaScreen(
+                                codCasa: vivienda.CodCasa,
+                                role: role,
+                                vivienda: vivienda,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -714,7 +724,7 @@ class ViviendaScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    color: Color.fromARGB(255, 25, 144, 234),
+                    color: const Color.fromARGB(255, 25, 144, 234),
                   ),
 
                   const SizedBox(height: 40),
@@ -888,52 +898,6 @@ class ViviendaScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildStatCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Icon(icon, size: 30, color: color),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.blueGrey[600],
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
       ),
     );
   }
