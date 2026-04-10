@@ -67,18 +67,6 @@ class _VariableSanitariaScreen extends State<VariableSanitariaScreen> {
     }
   };
 
-  Map<String, String> translationsVarSocial = {
-    "Autónomo": "Autonomous",
-    "Dependiente grave": "Severely Dependent",
-    "Dependiente leve": "Mildly Dependent",
-    "Riesgo aislamiento": "Isolation Risk",
-    "Tensiones económicas": "Economic Tensions",
-    "Con red social de apoyo": "With Social Support Network",
-    "Red social apoyo reducida": "Reduced Social Support Network",
-    "Sin red social de apoyo": "Without Social Support Network",
-    "Otros": "Others",
-  };
-
   Map<String, String> translationsVarSanitaria = {
     "Adicciones": "Addictions",
     "Alzheimer": "Alzheimer",
