@@ -14,7 +14,6 @@ import '../SuperAdmin/screen_TodoSensores.dart';
 import '../SuperAdmin/screen_TodoWearables.dart';
 import '../SuperAdmin/screen_VariablesSanitaria.dart';
 import '../SuperAdmin/screen_VariablesSociales.dart';
-import '../SuperAdmin/screen_adls.dart';
 import '../SuperAdmin/screen_administradores.dart';
 import '../SuperAdmin/screen_questions.dart';
 import '../SuperAdmin/screen_viviendas.dart';
@@ -300,18 +299,6 @@ class _NavBarSuperAdminState extends State<NavBarSuperAdmin> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => const TipoHabitacionScreen(),
-                      ),
-                    ),
-                  ),
-                  
-                  // Configurar Duracion de ADLs
-                  _buildSubMenuItem(
-                    icon: Icons.timer,
-                    label: isSpanish ? 'Configurar ADLs' : 'Configure ADLs',
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ADLsScreen(),
                       ),
                     ),
                   ),
