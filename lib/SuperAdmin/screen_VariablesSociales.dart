@@ -83,32 +83,9 @@ class _VariableSocialScreen extends State<VariableSocialScreen> {
     "Red social apoyo reducida": "Reduced Social Support Network",
     "Sin red social de apoyo": "Without Social Support Network",
     "Otros": "Others",
-  };
-
-  Map<String, String> translationsVarSanitaria = {
-    "Adicciones": "Addictions",
-    "Alzheimer": "Alzheimer",
-    "Anemia": "Anemia",
-    "Ansiedad": "Anxiety",
-    "Artrosis": "Osteoarthritis",
-    "Cáncer": "Cancer",
-    "Demencia": "Dementia",
-    "Depresion": "Depression",
-    "Diabetes": "Diabetes",
-    "Esquizofrenia": "Schizophrenia",
-    "Fragilidad": "Frailty",
-    "Hipertensión": "Hypertension",
-    "Ictus": "Stroke",
-    "Incontinencia Urinaria": "Urinary Incontinence",
-    "Infarto": "Heart Attack",
-    "Osteoporosis": "Osteoporosis",
-    "Parkinson": "Parkinson's",
-    "Problemas auditivos": "Hearing Problems",
-    "Problemas visuales": "Visual Problems",
-    "Sano": "Healthy",
-    "Trastornos de sueño": "Sleep Disorders",
-    "Trastornos mentales": "Mental Disorders",
-    "Otros": "Others",
+    "Eduación: basica":"Education: basic studies",
+    "Eduación: NO":"Education: NO",
+    "Eduación: alta":"Education: high",
   };
 
   // Función para obtener texto traducido
