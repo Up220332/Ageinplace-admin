@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:marquee/marquee.dart';
+import 'package:ageinplace_admin/BarraLateral/NavBar_super_admin.dart';
 
 import '../SuperAdmin/screen_habitaciones.dart';
 import '../SuperAdmin/screen_viviendas.dart';
@@ -269,6 +270,7 @@ class _SensoresScreenState extends State<SensoresScreen> {
         return false;
       },
       child: Scaffold(
+        endDrawer: const NavBarSuperAdmin(), // Drawer lateral derecho
         floatingActionButton: _buildFloatingActionButton(context),
         appBar: AppBar(
           backgroundColor: colorPrimario,
@@ -282,6 +284,18 @@ class _SensoresScreenState extends State<SensoresScreen> {
               Navigator.pop(context);
             },
           ),
+          // Botón para abrir el endDrawer
+          actions: [
+            Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.menu, color: Colors.white),
+                onPressed: () {
+                  Scaffold.of(context).openEndDrawer();
+                },
+                tooltip: 'Menú',
+              ),
+            ),
+          ],
           title: Center(
             child: SizedBox(
               height: 50,
@@ -292,11 +306,11 @@ class _SensoresScreenState extends State<SensoresScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 blankSpace: 20.0,
                 velocity: 50.0,
-                pauseAfterRound: Duration(seconds: 1),
+                pauseAfterRound: const Duration(seconds: 1),
                 startPadding: 100.0,
-                accelerationDuration: Duration(seconds: 1),
+                accelerationDuration: const Duration(seconds: 1),
                 accelerationCurve: Curves.linear,
-                decelerationDuration: Duration(milliseconds: 500),
+                decelerationDuration: const Duration(milliseconds: 500),
                 decelerationCurve: Curves.easeOut,
               ),
             ),
